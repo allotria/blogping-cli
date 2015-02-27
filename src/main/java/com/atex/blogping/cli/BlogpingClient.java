@@ -40,6 +40,8 @@ public class BlogpingClient {
 
     private void executeCommand() throws Exception {
 
+        printHelpIfRequested();
+
         validateParameters();
 
         String response = callBlogpingService();
@@ -90,14 +92,19 @@ public class BlogpingClient {
         return new GetMethod(sb.toString());
     }
 
-    private void validateParameters() {
-        if (help || isEmpty(url) || isEmpty(name)) {
-            if (!help) {
-                System.err.println("Missing mandatory parameter! See help for details.");
-            }
-
+    private void printHelpIfRequested() {
+        if (help) {
             jCommander.usage();
             System.exit(0);
         }
+    }
+
+    private void validateParameters() {
+        if (isEmpty(url) || isEmpty(name)) {
+            System.err.println("Missing mandatory parameter! See help for details.");
+            jCommander.usage();
+            System.exit(1);
+        }
+
     }
 }
